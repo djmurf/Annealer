@@ -1,12 +1,15 @@
 
 #include <Arduino.h>
 #include <Time.h>
-#include <Servo.h>
 #include "Feeder.h"
+#include <AFMotor.h>
+
+AF_Stepper stepper(48, 2);
 
 void Feeder::init() {
-    servo.attach(9);
-    servo.write(position);
+
+    position = stepsToPark;
+    mark = millis();
 }
 
 void Feeder::feed() {
@@ -16,26 +19,42 @@ void Feeder::feed() {
 
 void Feeder::feedLoop() {
 
-	if ( feeding == true && ( millis() - mark ) > speed  ) {
+	if ( feeding == true && ( millis() - mark ) > feedSpeed  ) {
 
-        if ( position <= servoMax  ) {
-            position += 1;
-            servo.write(position);
+        if ( position < stepsToMax  ) {
+            position += step;
+            stepper.step(step, BACKWARD, INTERLEAVE);
             mark = millis();
         } else {
-            returning = true;
+	        Serial.println(position);
+            returning = false;
             feeding = false;
+            pausing = true;
         }
 	}
 
     if ( returning == true && (millis() - mark ) > returnSpeed  ) {
 
-        if ( position >= servoPark  ) {
-            position -= 1;
-            servo.write(position);
+        if ( position > stepsToPark  ) {
+            position -= step;
+            stepper.step(step, FORWARD, INTERLEAVE);
             mark = millis();
         } else {
+	        Serial.println(position);
             returning = false;
+        }
+
+    }
+
+    // Pause at end of our feed.
+    if ( pausing == true && (millis() - mark ) > pauseTime  ) {
+
+        if ( mark > pauseTime ) {
+            returning = true;
+            pausing = false;
+            feeding = false;
+        } else {
+            mark = millis();
         }
 
     }
