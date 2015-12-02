@@ -21,8 +21,8 @@ class Feeder {
         void feedLoop();
 
     public:
-        void init();
         void feed();
         void loop();
+        Feeder();
 
 };

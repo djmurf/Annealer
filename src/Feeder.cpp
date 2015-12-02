@@ -6,8 +6,7 @@
 
 AF_Stepper stepper(48, 2);
 
-void Feeder::init() {
-
+Feeder::Feeder() {
     position = stepsToPark;
     mark = millis();
 }
@@ -26,7 +25,6 @@ void Feeder::feedLoop() {
             stepper.step(step, BACKWARD, INTERLEAVE);
             mark = millis();
         } else {
-	        Serial.println(position);
             returning = false;
             feeding = false;
             pausing = true;
@@ -40,7 +38,6 @@ void Feeder::feedLoop() {
             stepper.step(step, FORWARD, INTERLEAVE);
             mark = millis();
         } else {
-	        Serial.println(position);
             returning = false;
         }
 
