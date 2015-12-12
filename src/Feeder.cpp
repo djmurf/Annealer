@@ -9,7 +9,7 @@
 #define Y_DIR_PIN          61
 #define Y_ENABLE_PIN       56
 
-AccelStepper stepper2(1, Y_STEP_PIN, Y_DIR_PIN); // 1 = Driver
+AccelStepper stepper2(1, Y_STEP_PIN, Y_DIR_PIN);
 
 void doReturn();
 void testf();

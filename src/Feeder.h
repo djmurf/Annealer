@@ -1,4 +1,11 @@
 
+/**
+    Wiring config:
+    Red, blue, green, black from the front with usb to left.
+    Plugs into ramps 1.4 @ Y Position
+*/
+
+
 class Feeder {
 
     private:
