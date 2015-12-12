@@ -2,61 +2,76 @@
 #include <Arduino.h>
 #include <Time.h>
 #include "Feeder.h"
-#include <AFMotor.h>
+#include "AccelStepper.h"
 
-AF_Stepper stepper(48, 2);
+
+#define Y_STEP_PIN         60
+#define Y_DIR_PIN          61
+#define Y_ENABLE_PIN       56
+
+AccelStepper stepper2(1, Y_STEP_PIN, Y_DIR_PIN); // 1 = Driver
+
+void doReturn();
+void testf();
 
 Feeder::Feeder() {
-    position = stepsToPark;
-    mark = millis();
+    feedCount = 0;
+}
+
+void Feeder::init() {
+
+
+    stepper2.setMaxSpeed(2048);
+    stepper2.setAcceleration(500);
+    stepper2.setEnablePin(Y_ENABLE_PIN);
+    stepper2.setPinsInverted(false, false, true); //invert logic of enable pin
+    stepper2.enableOutputs();
+    stepper2.setSpeed(2048);
+
 }
 
 void Feeder::feed() {
-	Serial.println("Setting feeding to true..");
 	feeding = true;
-}
-
-void Feeder::feedLoop() {
-
-	if ( feeding == true && ( millis() - mark ) > feedSpeed  ) {
-
-        if ( position < stepsToMax  ) {
-            position += step;
-            stepper.step(step, BACKWARD, INTERLEAVE);
-            mark = millis();
-        } else {
-            returning = false;
-            feeding = false;
-            pausing = true;
-        }
-	}
-
-    if ( returning == true && (millis() - mark ) > returnSpeed  ) {
-
-        if ( position > stepsToPark  ) {
-            position -= step;
-            stepper.step(step, FORWARD, INTERLEAVE);
-            mark = millis();
-        } else {
-            returning = false;
-        }
-
-    }
-
-    // Pause at end of our feed.
-    if ( pausing == true && (millis() - mark ) > pauseTime  ) {
-
-        if ( mark > pauseTime ) {
-            returning = true;
-            pausing = false;
-            feeding = false;
-        } else {
-            mark = millis();
-        }
-
-    }
+    returning = false;
+    pausing = false;
+    stepper2.moveTo(-1800);
 }
 
 void Feeder::loop() {
-	feedLoop();
+
+    if ( feeding == true ) {
+        stepper2.setSpeed(feedSpeed);
+    } else if ( returning == true ) {
+        stepper2.setSpeed(returnSpeed);
+    }
+
+
+    if (stepper2.distanceToGo() != 0) {
+        stepper2.runSpeedToPosition();
+
+    } else {
+
+        if ( feeding == true ) {
+            feeding = false;
+            pausing = true;
+            feedCount++;
+            mark = millis();
+
+        } else if ( pausing == true ) {
+
+            if ( millis() - mark > pauseTime ) {
+                pausing = false;
+                returning = true;
+                stepper2.moveTo(0);
+            }
+        } else if ( returning == true ) {
+            returning = false;
+        }
+
+    }
+
+}
+
+int Feeder::getFeedCount() {
+    return feedCount;
 }

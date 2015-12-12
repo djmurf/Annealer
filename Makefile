@@ -4,7 +4,7 @@
 
 all:
 	platformio --force run --target upload
-	platformio  serialports monitor
+#	platformio  serialports monitor
 
 clean:
 	platformio --force run --target clean

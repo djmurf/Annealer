@@ -3,16 +3,24 @@ class Drum {
 
     private:
         boolean running = false;
-        unsigned int speed;
+        int speed;
         unsigned long mark;
+
+        const float RPM_RATIO = 53.33;
 
         void runLoop();
 
+        int timer;
+        int stepCounter;
+        float actualRotationTime;
+
     public:
-        void setSpeed(unsigned int speed);
         void start();
         void stop();
         void loop();
+        int setRpms();
+        float getExposureTime();
+        int getRpms();
 
         // Constructor
         Drum();
