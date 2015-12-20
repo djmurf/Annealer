@@ -6,7 +6,7 @@ class Drum {
         int speed;
         unsigned long mark;
 
-        const float RPM_RATIO = 53.33;
+        const float RPM_RATIO = 27;
 
         void runLoop();
 

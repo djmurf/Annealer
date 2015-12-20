@@ -43,7 +43,7 @@ void Drum::stop() {
 }
 
 int Drum::setRpms() {
-    speed = map(analogRead(speedPin), 0, 1023, 0, -3200);
+    speed = map(analogRead(speedPin), 0, 1023, 0, -500);
     stepper1.setSpeed(speed);
     return speed;
 }

@@ -24,7 +24,7 @@ class Feeder {
         // Tikme we puase after a feed before returning
         static const unsigned int pauseTime = 1000;
         static const unsigned int step = 1;
-        static const unsigned int feedSpeed = 1024;
+        static const unsigned int feedSpeed = 512;
         static const unsigned int returnSpeed = 2048;
 
         void feedLoop();

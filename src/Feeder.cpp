@@ -34,7 +34,7 @@ void Feeder::feed() {
 	feeding = true;
     returning = false;
     pausing = false;
-    stepper2.moveTo(-1800);
+    stepper2.moveTo(-1000);
 }
 
 void Feeder::loop() {
@@ -62,7 +62,7 @@ void Feeder::loop() {
             if ( millis() - mark > pauseTime ) {
                 pausing = false;
                 returning = true;
-                stepper2.moveTo(0);
+                stepper2.moveTo(-600);
             }
         } else if ( returning == true ) {
             returning = false;
