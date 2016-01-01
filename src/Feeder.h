@@ -14,12 +14,18 @@ class Feeder {
         boolean pausing     = false;
 
         unsigned long mark;
+        unsigned int position;
         unsigned int feedCount;
 
-        // Tikme we puase after a feed before returning
-        static const unsigned int pauseTime = 1000;
-        static const unsigned int feedSpeed = 512;
-        static const unsigned int returnSpeed = 2048;
+
+        static const int stepsToPark = 0;
+        static const int stepsToMax = 205;
+
+        // Time we puase after a feed before returning
+        static const unsigned int pauseTime = 200;
+        static const unsigned int step = 1;
+        static const unsigned int feedSpeed = 400;
+        static const unsigned int returnSpeed = 4196;
 
         void feedLoop();
 
